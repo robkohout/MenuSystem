@@ -11,6 +11,11 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 
+// Multiplayer Test Code
+#include "OnlineSubsystem.h"
+#include "Interfaces/OnlineSessionInterface.h"
+//#include "OnlineSessionSettings.h"
+
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////
@@ -58,6 +63,22 @@ void AMenuSystemCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	// Multiplayer Test Code
+	IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
+	if (OnlineSubsystem)
+	{
+		OnlineSessionInterface = OnlineSubsystem->GetSessionInterface();
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(
+				-1,
+				15.f,
+				FColor::Blue,
+				FString::Printf(TEXT("Found Subsystem %s"), *OnlineSubsystem->GetSubsystemName().ToString())
+			);
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
