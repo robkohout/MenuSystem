@@ -27,7 +27,7 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 			{
 				FString PlayerName = PlayerState->GetPlayerName();
 				GEngine->AddOnScreenDebugMessage(
-					1,
+					2,
 					60.f,
 					FColor::Cyan,
 					FString::Printf(TEXT("%s has joined the game"), *PlayerName)
@@ -58,7 +58,7 @@ void ALobbyGameMode::Logout(AController* Exiting)
 			{
 				FString PlayerName = PlayerState->GetPlayerName();
 				GEngine->AddOnScreenDebugMessage(
-					1,
+					2,
 					60.f,
 					FColor::Cyan,
 					FString::Printf(TEXT("%s has exited the game"), *PlayerName)
