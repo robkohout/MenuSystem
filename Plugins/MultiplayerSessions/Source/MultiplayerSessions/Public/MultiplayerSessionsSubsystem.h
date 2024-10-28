@@ -28,6 +28,7 @@ public:
 	void StartSession();
 
 protected:
+	bool IsValidSessionInterface();
 
 	//
 	// Internal callbacks for the delegates we'll add to the Online Session Interface delegate list.
