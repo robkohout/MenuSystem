@@ -21,7 +21,6 @@ void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FS
 {
 	if (!IsValidSessionInterface())	return;
 
-	// Now you can use the session interface like before.
 	auto ExistingSession = SessionInterface->GetNamedSession(NAME_GameSession);
 	if (ExistingSession != nullptr)
 	{
@@ -100,10 +99,18 @@ void UMultiplayerSessionsSubsystem::DestroySession()
 
 void UMultiplayerSessionsSubsystem::StartSession()
 {
-	// Replace each SessionInterface.Isvalid with this.  Note that you don't need
-	// to do this on delegate callbacks, just on the menu callable functions
-	if (!IsValidSessionInterface())	return;
+	if (!IsValidSessionInterface())
+	{
+		MultiplayerOnStartSessionComplete.Broadcast(false);
+		return;
+	}
 
+	StartSessionCompleteDelegateHandle = SessionInterface->AddOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegate);
+	if (!SessionInterface->StartSession(NAME_GameSession))
+	{
+		SessionInterface->ClearOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegateHandle);
+		MultiplayerOnStartSessionComplete.Broadcast(false);
+	}
 }
 
 bool UMultiplayerSessionsSubsystem::IsValidSessionInterface()
@@ -162,5 +169,10 @@ void UMultiplayerSessionsSubsystem::OnDestroySessionComplete(FName SessionName, 
 
 void UMultiplayerSessionsSubsystem::OnStartSessionComplete(FName SessionName, bool bWasSuccessful)
 {
+	if (SessionInterface)
+	{
+		SessionInterface->ClearOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegateHandle);
+	}
 
+	MultiplayerOnStartSessionComplete.Broadcast(bWasSuccessful);
 }
